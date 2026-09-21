@@ -2,10 +2,12 @@
 
 """follower_ros.py: Robot will follow the Yellow Line in a track"""
 
-__author__  = "Badr Essefiany"
+__author__ = "Arjun S Kumar (upstream)"
+# Source: https://github.com/arjunskumar/Line-Follower--ROS
+# Included in Badr Essefiany\u0027s Duckietown coursework repository.
 
 import rospy
-import cv2,
+import cv2
 import cv_bridge
 import numpy
 from sensor_msgs.msg import Image, CameraInfo
@@ -28,8 +30,8 @@ class Follower:
     mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
     
     h, w, d = image.shape
-    search_top = 3*h/4
-    search_bot = 3*h/4 + 20
+    search_top = (3*h)//4
+    search_bot = (3*h)//4 + 20
     mask[0:search_top, 0:w] = 0
     mask[search_bot:h, 0:w] = 0
     M = cv2.moments(mask)
@@ -47,7 +49,9 @@ class Follower:
     cv2.imshow("output", image)
     cv2.waitKey(3)
 
-rospy.init_node('follower')
-follower = Follower()
-rospy.spin()
+if __name__ == '__main__':
+  rospy.init_node('follower')
+  follower = Follower()
+  rospy.spin()
 # END ALL
+
