@@ -1,4 +1,8 @@
-# Duckietown robotics coursework and experiments
+# Duckietown robotics
+
+> **Selected project · academic** · ROS 1 and camera-based line-following experiments
+>
+> [Selected projects](https://github.com/BadrEss01/BadrEss#selected-projects) · [Coursework](https://github.com/BadrEss01/BadrEss/blob/main/COURSEWORK.md)
 
 Python experiments collected during robotics coursework, using a Duckietown ROS template. The repository contains a camera-based line follower, object-detection integration code, landmark simulation helpers and a CNN training script.
 
