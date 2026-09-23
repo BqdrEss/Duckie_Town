@@ -17,9 +17,10 @@ class Follower:
   def __init__(self):
     self.bridge = cv_bridge.CvBridge()
     #cv2.namedWindow("window", 1)
-    self.image_sub = rospy.Subscriber('/mybot/camera1/image_raw', Image, self.image_callback)
     self.cmd_vel_pub = rospy.Publisher('/cmd_vel',Twist, queue_size=1)
     self.twist = Twist()
+    # Create callback dependencies before subscribing: messages may arrive immediately.
+    self.image_sub = rospy.Subscriber('/mybot/camera1/image_raw', Image, self.image_callback)
     
   def image_callback(self, msg):
     image = self.bridge.imgmsg_to_cv2(msg,desired_encoding='bgr8')
@@ -45,6 +46,10 @@ class Follower:
       self.twist.angular.z = -float(err) / 100
       self.cmd_vel_pub.publish(self.twist)
       # CONTROL ends
+    else:
+      # Explicitly replace the previous moving command when the line is lost.
+      self.twist = Twist()
+      self.cmd_vel_pub.publish(self.twist)
     cv2.imshow("mask",mask)
     cv2.imshow("output", image)
     cv2.waitKey(3)

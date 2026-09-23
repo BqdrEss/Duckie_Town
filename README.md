@@ -2,7 +2,7 @@
 
 > **Selected project · academic** · ROS 1 and camera-based line-following experiments
 >
-> [Selected projects](https://github.com/BadrEss01/BadrEss#selected-projects) · [Coursework](https://github.com/BadrEss01/BadrEss/blob/main/COURSEWORK.md)
+> [Selected projects](https://github.com/BadrEss01/BadrEss01#selected-projects) · [Coursework](https://github.com/BadrEss01/BadrEss01/blob/main/COURSEWORK.md)
 
 Python experiments collected during robotics coursework, using a Duckietown ROS template. The repository contains a camera-based line follower, object-detection integration code, landmark simulation helpers and a CNN training script.
 
@@ -49,12 +49,12 @@ python3 -m pip install numpy opencv-python-headless
 python3 -m unittest discover -s tests -v
 ```
 
-The tests use real NumPy/OpenCV on synthetic images and stub ROS transport and GUI calls. They check centroid-based steering and cropping; they do not validate ROS communication, simulation, hardware or real-world perception.
+The tests use real NumPy/OpenCV on synthetic images and stub ROS transport and GUI calls. They check centroid-based steering, cropping and stopping after line loss; they do not validate ROS communication, simulation, hardware or real-world perception.
 
 ## Limitations
 
 - The inherited HSV thresholds are broad and need calibration; the code does not establish robust yellow-lane detection.
-- If no mask is found, the current controller publishes no new command. It has no explicit stop-on-loss or stale-image watchdog; do not deploy it on a moving robot without addressing and testing those behaviors.
+- A frame with no detected line now publishes a zero-velocity command, tested after a moving frame. A stale-image watchdog and handling of camera/transport failures still require implementation and hardware validation.
 - The repository does not establish obstacle avoidance, integrated mapping, a completed SLAM pipeline or measured navigation performance.
 - Dataset identities, trained model results and historical personal modifications require additional evidence.
 
@@ -66,5 +66,5 @@ The line follower is derived from [Arjun S Kumar's Line-Follower--ROS](https://g
 
 The repository infrastructure comes from [Duckietown's ROS template](https://github.com/duckietown/template-ros). The detector wrapper imports `dodo_detector` and `dodo_detector_ros`; the provenance and extent of modifications to the remaining experiments still need review. Existing license material is retained.
 
-The current maintenance pass fixes Python syntax and slice indexing and adds documentation and focused checks. It does not establish which historical components were independently implemented by the repository owner.
+The current maintenance pass fixes Python syntax, slice indexing, callback initialization order and stopping after line loss and adds documentation and focused checks. It does not establish which historical components were independently implemented by the repository owner.
 

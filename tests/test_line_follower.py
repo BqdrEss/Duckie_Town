@@ -62,12 +62,20 @@ class LineFollowerTests(unittest.TestCase):
         image[:85, 30:40] = (0, 200, 200)
         image[112:, 30:40] = (0, 200, 200)
         self.process(image)
-        self.publisher.publish.assert_not_called()
+        self.publisher.publish.assert_called_once()
+        self.assertEqual(self.publisher.publish.call_args.args[0].linear.x, 0.0)
 
-    def test_blank_frame_publishes_no_command(self):
-        # Documents existing behavior, not a safety guarantee.
+    def test_lost_line_replaces_previous_movement_with_stop(self):
+        image = np.zeros((120, 160, 3), dtype=np.uint8)
+        image[90:110, 38:43] = (0, 200, 200)
+        self.process(image)
+        self.assertGreater(self.publisher.publish.call_args.args[0].linear.x, 0)
+        self.publisher.reset_mock()
         self.process(np.zeros((120, 160, 3), dtype=np.uint8))
-        self.publisher.publish.assert_not_called()
+        self.publisher.publish.assert_called_once()
+        command = self.publisher.publish.call_args.args[0]
+        self.assertEqual(command.linear.x, 0.0)
+        self.assertEqual(command.angular.z, 0.0)
 
 
 if __name__ == "__main__":
